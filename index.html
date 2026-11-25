@@ -1,0 +1,1232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#f9f8f6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#161616" media="(prefers-color-scheme: dark)">
+<meta name="description" content="160 open-source pull request reviews by shihchengwei-lab, with six selected cases and links to the original evidence.">
+<title>160 Open-Source PR Reviews | shihchengwei-lab</title>
+<style>
+  :root {
+    --paper: #f9f8f6;
+    --ink: #1a1918;
+    --muted: #66645e;
+    --rule: #e2e0d8;
+    --surface: #f0eee9;
+    --control: #858179;
+    --measure: 35rem;
+    --sans: Inter, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+    color-scheme: light;
+    font: clamp(1.125rem, .96rem + .6vw, 1.375rem)/1.7 var(--sans);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #161616;
+      --ink: #dedede;
+      --muted: #a6a6a6;
+      --rule: #363636;
+      --surface: #232323;
+      --control: #858585;
+      color-scheme: dark;
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { background: var(--paper); color: var(--ink); scroll-behavior: smooth; }
+  body { margin: 0; padding: clamp(18px, 3vh, 34px) clamp(18px, 5vw, 27px) 3rem; }
+  h1, h2, h3, p { margin: 0; }
+  h1, h2, h3 { line-height: 1.28; letter-spacing: -.02em; text-wrap: balance; }
+  a { color: inherit; text-decoration-color: var(--control); text-decoration-thickness: 1px; text-underline-offset: .2em; }
+  a:hover { text-decoration-color: currentColor; }
+  :focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  [hidden] { display: none !important; }
+  .wrap { width: 100%; max-width: var(--measure); margin-inline: auto; }
+  .skip:not(:focus) { position: absolute; clip-path: inset(50%); width: 1px; height: 1px; overflow: hidden; }
+  .skip:focus { position: fixed; z-index: 2; inset: .6rem auto auto .6rem; background: var(--paper); padding: .45rem .8rem; }
+
+  .topbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: .25rem 1rem;
+    align-items: baseline;
+    margin-bottom: clamp(1.75rem, 4.7vw, 3rem);
+    color: var(--muted);
+    font-size: .78rem;
+  }
+  .handle { color: var(--ink); font-weight: 700; }
+  nav { display: flex; flex-wrap: wrap; gap: .2rem 1.1rem; }
+  .topbar a { padding-block: .25rem; text-decoration: none; }
+  .topbar a:hover { text-decoration: underline; }
+  .eyebrow { color: var(--muted); font-size: .78rem; letter-spacing: .085em; text-transform: uppercase; }
+  h1 { margin: .48rem 0 .62rem; font-size: clamp(1.9rem, 1.25rem + 2.3vw, 2.55rem); line-height: 1.12; }
+  .intro { color: var(--muted); }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .15rem .9rem;
+    align-items: baseline;
+    margin-top: .85rem;
+  }
+  .button { font-size: .84rem; font-weight: 700; }
+  .availability { color: var(--muted); font-size: .78rem; }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .55rem 1rem;
+    margin-top: 1.55rem;
+    padding-block: .7rem .8rem;
+    border-block: 1px solid var(--rule);
+  }
+  .stats strong { display: block; font-size: 1.52rem; line-height: 1.15; font-variant-numeric: tabular-nums; }
+  .stats p { color: var(--muted); font-size: .78rem; margin-top: .16rem; }
+
+  .section { margin-top: 2.6rem; }
+  .section h2 { margin: .26rem 0 .55rem; font-size: 1.5rem; }
+  .section-intro { color: var(--muted); font-size: .93rem; }
+  .cases { margin-top: .9rem; }
+  .case { border-top: 1px solid var(--rule); padding-block: .75rem .85rem; }
+  .case:last-child { border-bottom: 1px solid var(--rule); }
+  .case h3 { font-size: 1.07rem; margin: .22rem 0 .25rem; }
+  .case p:not(.eyebrow) { color: var(--muted); font-size: .9rem; }
+  .case a { display: inline-block; margin-top: .28rem; font-size: .8rem; }
+  .case-links { display: flex; flex-wrap: wrap; gap: 0 .9rem; }
+  #dify { scroll-margin-top: 1rem; }
+  .legend { display: flex; flex-wrap: wrap; gap: .2rem .9rem; margin: .65rem 0 .85rem; }
+  .legend b { color: var(--ink); }
+  .status { color: var(--muted); font-size: .83rem; }
+  .status.confirmed { color: var(--ink); font-weight: 700; }
+
+  .directory { border-block: 1px solid var(--rule); }
+  form {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(10rem, 1fr) minmax(11rem, 1.1fr) auto;
+    gap: .55rem;
+    align-items: end;
+    padding-block: .8rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  form label { min-width: 0; color: var(--muted); font-size: .78rem; }
+  form input, form select, form button {
+    display: block;
+    width: 100%;
+    min-height: 2.15rem;
+    margin-top: .18rem;
+    padding: .38rem .47rem;
+    color: var(--ink);
+    background-color: var(--paper);
+    border: 1px solid var(--control);
+    border-radius: 2px;
+    font: 400 max(16px, .8rem)/1.3 var(--sans);
+  }
+  form select {
+    appearance: none;
+    padding-right: 1.18rem;
+    text-overflow: ellipsis;
+    background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+    background-position: calc(100% - 13px) 50%, calc(100% - 8px) 50%;
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+  }
+  form button { width: auto; cursor: pointer; }
+  form button:hover { background: var(--surface); }
+  .keyboard-tools {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .2rem .85rem;
+    font-size: .78rem;
+    color: var(--muted);
+  }
+  .keyboard-tools a { color: var(--ink); }
+  .keyboard-tools button { margin-top: 0; }
+  .keyboard-tools kbd { font: inherit; font-weight: 700; }
+  .count { padding-block: .52rem .28rem; color: var(--muted); font-size: .78rem; }
+  table { width: 100%; table-layout: fixed; border-collapse: collapse; text-align: left; font-size: .86rem; }
+  th, td { padding: .42rem .48rem .42rem 0; vertical-align: top; overflow-wrap: anywhere; }
+  th { border-bottom: 1px solid var(--control); font-size: .8rem; }
+  th:nth-child(1) { width: 42%; }
+  th:nth-child(2) { width: 34%; }
+  td { border-bottom: 1px solid var(--rule); }
+  tr:last-child td { border-bottom: 0; }
+  th:last-child, td:last-child { padding-right: 0; }
+  td:last-child { color: var(--muted); font-size: .8rem; }
+  .pr { font-weight: 700; }
+  .pr span { font: 400 .84em/1.3 var(--mono); white-space: nowrap; color: var(--muted); }
+  .empty { padding-block: .6rem; color: var(--muted); }
+  .quiet-reviews { border-top: 1px solid var(--rule); }
+  .quiet-reviews summary { padding: .6rem 0; cursor: pointer; font-size: .86rem; font-weight: 700; }
+  .quiet-reviews summary:hover { text-decoration: underline; text-underline-offset: .2em; }
+  .scope { margin-block: 2.4rem 1.8rem; }
+  .scope h2 { font-size: 1.1rem; margin-bottom: .35rem; }
+  .scope p { color: var(--muted); font-size: .9rem; }
+  .scope p + p { margin-top: .55rem; }
+  footer .wrap {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: .25rem 1rem;
+    padding-top: .7rem;
+    border-top: 1px solid var(--rule);
+    color: var(--muted);
+    font-size: .78rem;
+  }
+
+  @media (max-width: 840px) {
+    form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    form button { justify-self: start; }
+  }
+  @media (max-width: 500px) {
+    form { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 440px) {
+    .topbar { flex-direction: column; align-items: flex-start; }
+    .stats { gap: .45rem .55rem; }
+    .stats p { line-height: 1.35; }
+    th:nth-child(1) { width: 38%; }
+    th:nth-child(2) { width: 35%; }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header id="top" tabindex="-1">
+  <div class="wrap">
+    <div class="topbar">
+      <a class="handle" href="https://github.com/shihchengwei-lab">shihchengwei-lab</a>
+      <nav aria-label="Page navigation"><a href="#cases">Selected cases</a><a href="#reviews">All reviews</a></nav>
+    </div>
+    <p class="eyebrow">Open-source review portfolio</p>
+    <h1>I reviewed 160 <span>open-source PRs.</span></h1>
+    <p class="intro">I use AI-assisted review to check what happens at the edges of task queues, query engines, and typed APIs. Here is what I reported and how maintainers responded.</p>
+    <div class="hero-actions"><a class="button" href="#reviews">Browse all 160 reviews</a><span class="availability">Taiwan · Open to async, part-time work</span></div>
+    <div class="stats" aria-label="Review outcome summary">
+      <div><strong>160</strong><p>Pull requests reviewed</p></div>
+      <div><strong>35</strong><p>PRs with public feedback</p></div>
+      <div><strong>22</strong><p>Confirmed or acted on</p></div>
+    </div>
+  </div>
+</header>
+<main class="wrap" id="main" tabindex="-1">
+  <section class="section" id="cases" aria-labelledby="cases-title" tabindex="-1">
+    <p class="eyebrow">Selected cases</p>
+    <h2 id="cases-title">What the authors did next</h2>
+    <div class="cases">
+      <article class="case" id="dify" aria-labelledby="dify-title">
+        <p class="eyebrow">Dify · Queue reliability</p>
+        <h3 id="dify-title">A queue fix still left two handoff gaps.</h3>
+        <p>I flagged two cases that could leave queued work stalled or handled by conflicting workers. The author confirmed both as blockers. The PR later closed without merging.</p>
+        <div class="case-links">
+          <a href="https://github.com/langgenius/dify/pull/46310#issuecomment-6981994924">My review · #46310</a>
+          <a href="https://github.com/langgenius/dify/pull/46310#issuecomment-6992254631">Author’s response · #46310</a>
+        </div>
+      </article>
+      <article class="case">
+        <p class="eyebrow">Apache DataFusion · Query ordering</p>
+        <h3>A query returned rows in the wrong order.</h3>
+        <p>I reported a small example that returned two rows out of order. The author reproduced it and opened a separate fix with tests.</p>
+        <a href="https://github.com/apache/datafusion/pull/27597#issuecomment-7049002958">Author’s response · #27597</a>
+      </article>
+      <article class="case">
+        <p class="eyebrow">Apache Iceberg Go · Write retries</p>
+        <h3>A retry reported failure after the write succeeded.</h3>
+        <p>My test showed that a client could report a failed save even though the server had already applied the write. The author updated the retry logic so it reports an uncertain outcome when it can no longer verify the write.</p>
+        <a href="https://github.com/apache/iceberg-go/pull/2679#issuecomment-7136908103">Author’s response · #2679</a>
+      </article>
+      <article class="case">
+        <p class="eyebrow">Apache Flink · Saved query plans</p>
+        <h3>A query ran directly but failed from a saved plan.</h3>
+        <p>I checked both execution paths. The author confirmed that loading the saved plan picked the wrong function signature and said they would try a separate fix.</p>
+        <a href="https://github.com/apache/flink/pull/30080#issuecomment-7151901415">Author’s response · #30080</a>
+      </article>
+      <article class="case">
+        <p class="eyebrow">Apache Spark · SQL diagnostics</p>
+        <h3>A SQL error pointed to the wrong line.</h3>
+        <p>I found a mismatch in where the parser marked the error. The author corrected the highlighted location and added tests for both execution paths.</p>
+        <a href="https://github.com/apache/spark/pull/60724#issuecomment-7112147391">Author’s response · #60724</a>
+      </article>
+      <article class="case">
+        <p class="eyebrow">ClickHouse · Query correctness</p>
+        <h3>A query could skip matching rows.</h3>
+        <p>I flagged a mismatch between the query and its text index. The author confirmed the missing rows, fixed the PR, and added a regression test.</p>
+        <a href="https://github.com/ClickHouse/ClickHouse/pull/133245#issuecomment-7063928589">Author’s response · #133245</a>
+      </article>
+    </div>
+  </section>
+  <section class="section" id="reviews" aria-labelledby="review-title" tabindex="-1">
+    <p class="eyebrow">November 25, 2026 snapshot</p>
+    <h2 id="review-title">All 160 reviews</h2>
+    <p class="section-intro">Every row links to the original GitHub PR. Where I left public feedback, the review comment has its own link.</p>
+    <div class="legend" aria-label="Outcome counts">
+      <span class="status confirmed"><b>22</b> confirmed or acted on</span>
+      <span class="status pending"><b>11</b> follow-up pending</span>
+      <span class="status closed"><b>2</b> closed, unconfirmed</span>
+      <span class="status quiet"><b>125</b> no comment</span>
+    </div>
+    <div class="directory">
+      <form role="search" id="filters" aria-label="Filter the review index" hidden>
+        <label>Find a PR<input id="query" type="search" placeholder="Example: Dify or #46310" autocomplete="off" aria-keyshortcuts="/"></label>
+        <label>Project<select id="project"><option value="">All projects</option></select></label>
+        <label>Outcome<select id="outcome"><option value="">All outcomes</option><option value="confirmed">Confirmed or acted on</option><option value="pending">Follow-up pending</option><option value="closed">Closed, unconfirmed</option><option value="quiet">No comment</option></select></label>
+        <button type="reset">Clear filters</button>
+        <p class="keyboard-tools">
+          <a href="#count">Jump to results</a>
+          <button id="shortcut-toggle" type="button" aria-pressed="true">Keyboard shortcuts</button>
+          <span id="shortcut-help"><kbd>j</kbd> / <kbd>k</kbd> to move between rows. <kbd>/</kbd> to search.</span>
+        </p>
+      </form>
+      <p class="count" id="count" role="status" tabindex="-1">160 of 160 reviews match</p>
+      <table id="commented-reviews" aria-label="Reviews with public comments">
+        <thead><tr><th scope="col">Pull request</th><th scope="col">Outcome</th><th scope="col">Evidence</th></tr></thead>
+        <tbody>
+<tr data-project="apache/arrow" data-status="confirmed">
+  <td><a class="pr" href="https://github.com/apache/arrow/pull/55660">Apache Arrow <span>#55660</span></a></td>
+  <td><span class="status confirmed">Confirmed or acted on</span></td>
+  <td><a href="https://github.com/apache/arrow/pull/55660#issuecomment-7008394155" aria-label="Review comment on Apache Arrow #55660">Review comment</a></td>
+</tr>
+<tr data-project="apache/datafusion" data-status="confirmed">
+  <td><a class="pr" href="https://github.com/apache/datafusion/pull/27597">Apache DataFusion <span>#27597</span></a></td>
+  <td><span class="status confirmed">Confirmed or acted on</span></td>
+  <td><a href="https://github.com/apache/datafusion/pull/27597#issuecomment-7036916326" aria-label="Review comment on Apache DataFusion #27597">Review comment</a></td>
+</tr>
+<tr data-project="apache/flink" data-status="confirmed">
+  <td><a class="pr" href="https://github.com/apache/flink/pull/30080">Apache Flink <span>#30080</span></a></td>
+  <td><span class="status confirmed">Confirmed or acted on</span></td>
+  <td><a href="https://github.com/apache/flink/pull/30080#issuecomment-7149014587" aria-label="Review comment on Apache Flink #30080">Review comment</a></td>
+</tr>
+<tr data-project="apache/flink" data-status="confirmed">
+  <td><a class="pr" href="https://github.com/apache/flink/pull/30022">Apache Flink <span>#30022</span></a></td>
+  <td><span class="status confirmed">Confirmed or acted on</span></td>
+  <td><a href="https://github.com/apache/flink/pull/30022#issuecomment-7035073896" aria-label="Review comment on Apache Flink #30022">Review comment</a></td>
+</tr>
+<tr data-project="apache/hudi" data-status="confirmed">
+  <td><a class="pr" href="https://github.com/apache/hudi/pull/20895">Apache Hudi <span>#20895</span></a></td>
+  <td><span class="status confirmed">Confirmed or acted on</span></td>
+  <td><a href="https://github.com/apache/hudi/pull/20895#issuecomment-7136160884" aria-label="Review comment on Apache Hudi #20895">Review comment</a></td>
+</tr>
+<tr data-project="apache/iceberg-go" data-status="confirmed">
+  <td><a class="pr" href="https://github.com/apache/iceberg-go/pull/2679">Apache Iceberg Go <span>#2679</span></a></td>
+  <td><span class="status confirmed">Confirmed or acted on</span></td>
+  <td><a href="https://github.com/apache/iceberg-go/pull/2679#issuecomment-7106623743" aria-label="Review comment on Apache Iceberg Go #2679">Review comment</a></td>
+</tr>
+<tr data-project="apache/kafka" data-status="confirmed">
+  <td><a class="pr" href="https://github.com/apache/kafka/pull/24292">Apache Kafka <span>#24292</span></a></td>
+  <td><span class="status confirmed">Confirmed or acted on</span></td>
+  <td><a href="https://github.com/apache/kafka/pull/24292#issuecomment-7008198647" aria-label="Review comment on Apache Kafka #24292">Review comment</a></td>
+</tr>
+<tr data-project="apache/ozone" data-status="confirmed">
+  <td><a class="pr" href="https://github.com/apache/ozone/pull/12125">Apache Ozone <span>#12125</span></a></td>
+  <td><span class="status confirmed">Confirmed or acted on</span></td>
+  <td><a href="https://github.com/apache/ozone/pull/12125#issuecomment-7137559369" aria-label="Review comment on Apache Ozone #12125">Review comment</a></td>
+</tr>
+<tr data-project="apache/pulsar" data-status="confirmed">
+  <td><a class="pr" href="https://github.com/apache/pulsar/pull/27666">Apache Pulsar <span>#27666</span></a></td>
+  <td><span class="status confirmed">Confirmed or acted on</span></td>
+  <td><a href="https://github.com/apache/pulsar/pull/27666#issuecomment-7015428325" aria-label="Review comment on Apache Pulsar #27666">Review comment</a></td>
+</tr>
+<tr data-project="apache/spark" data-status="confirmed">
+  <td><a class="pr" href="https://github.com/apache/spark/pull/60724">Apache Spark <span>#60724</span></a></td>
+  <td><span class="status confirmed">Confirmed or acted on</span></td>
+  <td><a href="https://github.com/apache/spark/pull/60724#issuecomment-7058670635" aria-label="Review comment on Apache Spark #60724">Review comment</a></td>
+</tr>
+<tr data-project="clickhouse/clickhouse" data-status="confirmed">
+  <td><a class="pr" href="https://github.com/ClickHouse/ClickHouse/pull/133245">ClickHouse <span>#133245</span></a></td>
+  <td><span class="status confirmed">Confirmed or acted on</span></td>
+  <td><a href="https://github.com/ClickHouse/ClickHouse/pull/133245#issuecomment-7054380919" aria-label="Review comment on ClickHouse #133245">Review comment</a></td>
+</tr>
+<tr data-project="clickhouse/clickhouse" data-status="confirmed">
+  <td><a class="pr" href="https://github.com/ClickHouse/ClickHouse/pull/133120">ClickHouse <span>#133120</span></a></td>
+  <td><span class="status confirmed">Confirmed or acted on</span></td>
+  <td><a href="https://github.com/ClickHouse/ClickHouse/pull/133120#issuecomment-7043950742" aria-label="Review comment on ClickHouse #133120">Review comment</a></td>
+</tr>
+<tr data-project="delta-io/delta" data-status="confirmed">
+  <td><a class="pr" href="https://github.com/delta-io/delta/pull/8256">Delta Lake <span>#8256</span></a></td>
+  <td><span class="status confirmed">Confirmed or acted on</span></td>
+  <td><a href="https://github.com/delta-io/delta/pull/8256#issuecomment-7057960766" aria-label="Review comment on Delta Lake #8256">Review comment</a></td>
+</tr>
+<tr data-project="langgenius/dify" data-status="confirmed">
+  <td><a class="pr" href="https://github.com/langgenius/dify/pull/46310">Dify <span>#46310</span></a></td>
+  <td><span class="status confirmed">Confirmed or acted on</span></td>
+  <td><a href="https://github.com/langgenius/dify/pull/46310#issuecomment-6981994924" aria-label="Review comment on Dify #46310">Review comment</a></td>
+</tr>
+<tr data-project="duckdb/duckdb" data-status="confirmed">
+  <td><a class="pr" href="https://github.com/duckdb/duckdb/pull/29115">DuckDB <span>#29115</span></a></td>
+  <td><span class="status confirmed">Confirmed or acted on</span></td>
+  <td><a href="https://github.com/duckdb/duckdb/pull/29115#issuecomment-7046876025" aria-label="Review comment on DuckDB #29115">Review comment</a></td>
+</tr>
+<tr data-project="effect-ts/effect" data-status="confirmed">
+  <td><a class="pr" href="https://github.com/Effect-TS/effect/pull/10802">Effect <span>#10802</span></a></td>
+  <td><span class="status confirmed">Confirmed or acted on</span></td>
+  <td><a href="https://github.com/Effect-TS/effect/pull/10802#issuecomment-7058087237" aria-label="Review comment on Effect #10802">Review comment</a></td>
+</tr>
+<tr data-project="apache/fluss" data-status="confirmed">
+  <td><a class="pr" href="https://github.com/apache/fluss/pull/5289">Fluss <span>#5289</span></a></td>
+  <td><span class="status confirmed">Confirmed or acted on</span></td>
+  <td><a href="https://github.com/apache/fluss/pull/5289#issuecomment-7041135080" aria-label="Review comment on Fluss #5289">Review comment</a></td>
+</tr>
+<tr data-project="apache/parquet-java" data-status="confirmed">
+  <td><a class="pr" href="https://github.com/apache/parquet-java/pull/3971">Parquet Java <span>#3971</span></a></td>
+  <td><span class="status confirmed">Confirmed or acted on</span></td>
+  <td><a href="https://github.com/apache/parquet-java/pull/3971#issuecomment-7008959429" aria-label="Review comment on Parquet Java #3971">Review comment</a></td>
+</tr>
+<tr data-project="prometheus/prometheus" data-status="confirmed">
+  <td><a class="pr" href="https://github.com/prometheus/prometheus/pull/20561">Prometheus <span>#20561</span></a></td>
+  <td><span class="status confirmed">Confirmed or acted on</span></td>
+  <td><a href="https://github.com/prometheus/prometheus/pull/20561#issuecomment-7152789358" aria-label="Review comment on Prometheus #20561">Review comment</a></td>
+</tr>
+<tr data-project="prometheus/prometheus" data-status="confirmed">
+  <td><a class="pr" href="https://github.com/prometheus/prometheus/pull/20560">Prometheus <span>#20560</span></a></td>
+  <td><span class="status confirmed">Confirmed or acted on</span></td>
+  <td><a href="https://github.com/prometheus/prometheus/pull/20560#issuecomment-7161025633" aria-label="Review comment on Prometheus #20560">Review comment</a></td>
+</tr>
+<tr data-project="temporalio/temporal" data-status="confirmed">
+  <td><a class="pr" href="https://github.com/temporalio/temporal/pull/13188">Temporal <span>#13188</span></a></td>
+  <td><span class="status confirmed">Confirmed or acted on</span></td>
+  <td><a href="https://github.com/temporalio/temporal/pull/13188#issuecomment-7056794879" aria-label="Review comment on Temporal #13188">Review comment</a></td>
+</tr>
+<tr data-project="apache/tika" data-status="confirmed">
+  <td><a class="pr" href="https://github.com/apache/tika/pull/3654">Tika <span>#3654</span></a></td>
+  <td><span class="status confirmed">Confirmed or acted on</span></td>
+  <td><a href="https://github.com/apache/tika/pull/3654#issuecomment-7105708451" aria-label="Review comment on Tika #3654">Review comment</a></td>
+</tr>
+<tr data-project="apache/arrow" data-status="pending">
+  <td><a class="pr" href="https://github.com/apache/arrow/pull/55694">Apache Arrow <span>#55694</span></a></td>
+  <td><span class="status pending">Follow-up pending</span></td>
+  <td><a href="https://github.com/apache/arrow/pull/55694#issuecomment-7055374444" aria-label="Review comment on Apache Arrow #55694">Review comment</a></td>
+</tr>
+<tr data-project="apache/calcite" data-status="pending">
+  <td><a class="pr" href="https://github.com/apache/calcite/pull/5435">Apache Calcite <span>#5435</span></a></td>
+  <td><span class="status pending">Follow-up pending</span></td>
+  <td><a href="https://github.com/apache/calcite/pull/5435#issuecomment-7105022268" aria-label="Review comment on Apache Calcite #5435">Review comment</a></td>
+</tr>
+<tr data-project="apache/flink" data-status="pending">
+  <td><a class="pr" href="https://github.com/apache/flink/pull/30075">Apache Flink <span>#30075</span></a></td>
+  <td><span class="status pending">Follow-up pending</span></td>
+  <td><a href="https://github.com/apache/flink/pull/30075#issuecomment-7132120995" aria-label="Review comment on Apache Flink #30075">Review comment</a></td>
+</tr>
+<tr data-project="apache/spark" data-status="pending">
+  <td><a class="pr" href="https://github.com/apache/spark/pull/60810">Apache Spark <span>#60810</span></a></td>
+  <td><span class="status pending">Follow-up pending</span></td>
+  <td><a href="https://github.com/apache/spark/pull/60810#discussion_r4681349684" aria-label="Review comment on Apache Spark #60810">Review comment</a></td>
+</tr>
+<tr data-project="clickhouse/clickhouse" data-status="pending">
+  <td><a class="pr" href="https://github.com/ClickHouse/ClickHouse/pull/133280">ClickHouse <span>#133280</span></a></td>
+  <td><span class="status pending">Follow-up pending</span></td>
+  <td><a href="https://github.com/ClickHouse/ClickHouse/pull/133280#issuecomment-7055929101" aria-label="Review comment on ClickHouse #133280">Review comment</a></td>
+</tr>
+<tr data-project="clickhouse/clickhouse" data-status="pending">
+  <td><a class="pr" href="https://github.com/ClickHouse/ClickHouse/pull/133268">ClickHouse <span>#133268</span></a></td>
+  <td><span class="status pending">Follow-up pending</span></td>
+  <td><a href="https://github.com/ClickHouse/ClickHouse/pull/133268#issuecomment-7054900194" aria-label="Review comment on ClickHouse #133268">Review comment</a></td>
+</tr>
+<tr data-project="etcd-io/etcd" data-status="pending">
+  <td><a class="pr" href="https://github.com/etcd-io/etcd/pull/22850">etcd <span>#22850</span></a></td>
+  <td><span class="status pending">Follow-up pending</span></td>
+  <td><a href="https://github.com/etcd-io/etcd/pull/22850#issuecomment-7007344390" aria-label="Review comment on etcd #22850">Review comment</a></td>
+</tr>
+<tr data-project="prefecthq/prefect" data-status="pending">
+  <td><a class="pr" href="https://github.com/PrefectHQ/prefect/pull/23874">Prefect <span>#23874</span></a></td>
+  <td><span class="status pending">Follow-up pending</span></td>
+  <td><a href="https://github.com/PrefectHQ/prefect/pull/23874#discussion_r4616892632" aria-label="Review comment on Prefect #23874">Review comment</a></td>
+</tr>
+<tr data-project="sgl-project/sglang" data-status="pending">
+  <td><a class="pr" href="https://github.com/sgl-project/sglang/pull/51683">SGLang <span>#51683</span></a></td>
+  <td><span class="status pending">Follow-up pending</span></td>
+  <td><a href="https://github.com/sgl-project/sglang/pull/51683#issuecomment-7056527407" aria-label="Review comment on SGLang #51683">Review comment</a></td>
+</tr>
+<tr data-project="temporalio/temporal" data-status="pending">
+  <td><a class="pr" href="https://github.com/temporalio/temporal/pull/13245">Temporal <span>#13245</span></a></td>
+  <td><span class="status pending">Follow-up pending</span></td>
+  <td><a href="https://github.com/temporalio/temporal/pull/13245#issuecomment-7130945988" aria-label="Review comment on Temporal #13245">Review comment</a></td>
+</tr>
+<tr data-project="vllm-project/vllm" data-status="pending">
+  <td><a class="pr" href="https://github.com/vllm-project/vllm/pull/68539">vLLM <span>#68539</span></a></td>
+  <td><span class="status pending">Follow-up pending</span></td>
+  <td><a href="https://github.com/vllm-project/vllm/pull/68539#issuecomment-6997488779" aria-label="Review comment on vLLM #68539">Review comment</a></td>
+</tr>
+<tr data-project="apache/kafka" data-status="closed">
+  <td><a class="pr" href="https://github.com/apache/kafka/pull/24324">Apache Kafka <span>#24324</span></a></td>
+  <td><span class="status closed">Closed, unconfirmed</span></td>
+  <td><a href="https://github.com/apache/kafka/pull/24324#issuecomment-7056225855" aria-label="Review comment on Apache Kafka #24324">Review comment</a></td>
+</tr>
+<tr data-project="influxdata/telegraf" data-status="closed">
+  <td><a class="pr" href="https://github.com/influxdata/telegraf/pull/20201">Telegraf <span>#20201</span></a></td>
+  <td><span class="status closed">Closed, unconfirmed</span></td>
+  <td><a href="https://github.com/influxdata/telegraf/pull/20201#issuecomment-7057419634" aria-label="Review comment on Telegraf #20201">Review comment</a></td>
+</tr>
+        </tbody>
+      </table>
+      <details class="quiet-reviews" id="quiet-reviews">
+        <summary>No comment (<span id="quiet-count">125</span>)</summary>
+        <table aria-label="Reviews without public comments">
+          <thead><tr><th scope="col">Pull request</th><th scope="col">Outcome</th><th scope="col">Evidence</th></tr></thead>
+          <tbody>
+<tr data-project="apache/airflow" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/airflow/pull/77489">Apache Airflow <span>#77489</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/airflow" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/airflow/pull/77380">Apache Airflow <span>#77380</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/airflow" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/airflow/pull/77305">Apache Airflow <span>#77305</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/airflow" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/airflow/pull/77382">Apache Airflow <span>#77382</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/apisix" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/apisix/pull/14247">Apache APISIX <span>#14247</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/arrow-rs" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/arrow-rs/pull/12369">Apache Arrow Rust <span>#12369</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/arrow-rs" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/arrow-rs/pull/12365">Apache Arrow Rust <span>#12365</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/arrow-rs" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/arrow-rs/pull/12363">Apache Arrow Rust <span>#12363</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/arrow-rs" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/arrow-rs/pull/12352">Apache Arrow Rust <span>#12352</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/arrow-rs" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/arrow-rs/pull/12333">Apache Arrow Rust <span>#12333</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/calcite" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/calcite/pull/5445">Apache Calcite <span>#5445</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/calcite" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/calcite/pull/5443">Apache Calcite <span>#5443</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/flink" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/flink/pull/30081">Apache Flink <span>#30081</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/hudi" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/hudi/pull/20897">Apache Hudi <span>#20897</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/hudi" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/hudi/pull/20893">Apache Hudi <span>#20893</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/hudi" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/hudi/pull/20888">Apache Hudi <span>#20888</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/hudi" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/hudi/pull/20877">Apache Hudi <span>#20877</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/hudi" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/hudi/pull/20777">Apache Hudi <span>#20777</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/iceberg" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/iceberg/pull/19124">Apache Iceberg <span>#19124</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/iceberg" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/iceberg/pull/19122">Apache Iceberg <span>#19122</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/iceberg" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/iceberg/pull/19105">Apache Iceberg <span>#19105</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/iceberg" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/iceberg/pull/19104">Apache Iceberg <span>#19104</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/iceberg" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/iceberg/pull/19099">Apache Iceberg <span>#19099</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/iceberg" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/iceberg/pull/19039">Apache Iceberg <span>#19039</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/iceberg-go" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/iceberg-go/pull/2678">Apache Iceberg Go <span>#2678</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/iceberg-go" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/iceberg-go/pull/2667">Apache Iceberg Go <span>#2667</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/iceberg-go" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/iceberg-go/pull/2653">Apache Iceberg Go <span>#2653</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/kafka" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/kafka/pull/24354">Apache Kafka <span>#24354</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/kafka" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/kafka/pull/24351">Apache Kafka <span>#24351</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/kafka" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/kafka/pull/24343">Apache Kafka <span>#24343</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/kafka" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/kafka/pull/24334">Apache Kafka <span>#24334</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/kafka" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/kafka/pull/24320">Apache Kafka <span>#24320</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/kafka" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/kafka/pull/24304">Apache Kafka <span>#24304</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/kafka" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/kafka/pull/24302">Apache Kafka <span>#24302</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/kafka" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/kafka/pull/24300">Apache Kafka <span>#24300</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/kafka" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/kafka/pull/24294">Apache Kafka <span>#24294</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/ozone" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/ozone/pull/12099">Apache Ozone <span>#12099</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/ozone" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/ozone/pull/12065">Apache Ozone <span>#12065</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/paimon" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/paimon/pull/11377">Apache Paimon <span>#11377</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/pekko" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/pekko/pull/3800">Apache Pekko <span>#3800</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/spark" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/spark/pull/60835">Apache Spark <span>#60835</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/spark" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/spark/pull/60834">Apache Spark <span>#60834</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/spark" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/spark/pull/60816">Apache Spark <span>#60816</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/spark" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/spark/pull/60805">Apache Spark <span>#60805</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/spark" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/spark/pull/60733">Apache Spark <span>#60733</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/spark" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/spark/pull/60691">Apache Spark <span>#60691</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/arrow-rs" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/arrow-rs/pull/12344">Apache Arrow Rust <span>#12344</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/beam" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/beam/pull/41529">Beam <span>#41529</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/beam" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/beam/pull/41446">Beam <span>#41446</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/bookkeeper" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/bookkeeper/pull/4930">BookKeeper <span>#4930</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="clickhouse/clickhouse" data-status="quiet">
+  <td><a class="pr" href="https://github.com/ClickHouse/ClickHouse/pull/133163">ClickHouse <span>#133163</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="clickhouse/clickhouse" data-status="quiet">
+  <td><a class="pr" href="https://github.com/ClickHouse/ClickHouse/pull/133125">ClickHouse <span>#133125</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="clickhouse/clickhouse" data-status="quiet">
+  <td><a class="pr" href="https://github.com/ClickHouse/ClickHouse/pull/133118">ClickHouse <span>#133118</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="clickhouse/clickhouse" data-status="quiet">
+  <td><a class="pr" href="https://github.com/ClickHouse/ClickHouse/pull/133035">ClickHouse <span>#133035</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="clickhouse/clickhouse" data-status="quiet">
+  <td><a class="pr" href="https://github.com/ClickHouse/ClickHouse/pull/132957">ClickHouse <span>#132957</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="clickhouse/clickhouse" data-status="quiet">
+  <td><a class="pr" href="https://github.com/ClickHouse/ClickHouse/pull/132943">ClickHouse <span>#132943</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="delta-io/delta" data-status="quiet">
+  <td><a class="pr" href="https://github.com/delta-io/delta/pull/8317">Delta Lake <span>#8317</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="delta-io/delta" data-status="quiet">
+  <td><a class="pr" href="https://github.com/delta-io/delta/pull/8294">Delta Lake <span>#8294</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="delta-io/delta" data-status="quiet">
+  <td><a class="pr" href="https://github.com/delta-io/delta/pull/8273">Delta Lake <span>#8273</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="delta-io/delta" data-status="quiet">
+  <td><a class="pr" href="https://github.com/delta-io/delta/pull/8265">Delta Lake <span>#8265</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="delta-io/delta" data-status="quiet">
+  <td><a class="pr" href="https://github.com/delta-io/delta/pull/8257">Delta Lake <span>#8257</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="delta-io/delta" data-status="quiet">
+  <td><a class="pr" href="https://github.com/delta-io/delta/pull/8225">Delta Lake <span>#8225</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/doris" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/doris/pull/70820">Doris <span>#70820</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="duckdb/duckdb" data-status="quiet">
+  <td><a class="pr" href="https://github.com/duckdb/duckdb/pull/29159">DuckDB <span>#29159</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="duckdb/duckdb" data-status="quiet">
+  <td><a class="pr" href="https://github.com/duckdb/duckdb/pull/29158">DuckDB <span>#29158</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="duckdb/duckdb" data-status="quiet">
+  <td><a class="pr" href="https://github.com/duckdb/duckdb/pull/29151">DuckDB <span>#29151</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="duckdb/duckdb" data-status="quiet">
+  <td><a class="pr" href="https://github.com/duckdb/duckdb/pull/29133">DuckDB <span>#29133</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="duckdb/duckdb" data-status="quiet">
+  <td><a class="pr" href="https://github.com/duckdb/duckdb/pull/29129">DuckDB <span>#29129</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="duckdb/duckdb" data-status="quiet">
+  <td><a class="pr" href="https://github.com/duckdb/duckdb/pull/29077">DuckDB <span>#29077</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="duckdb/duckdb" data-status="quiet">
+  <td><a class="pr" href="https://github.com/duckdb/duckdb/pull/29062">DuckDB <span>#29062</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="effect-ts/effect" data-status="quiet">
+  <td><a class="pr" href="https://github.com/Effect-TS/effect/pull/10836">Effect <span>#10836</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="effect-ts/effect" data-status="quiet">
+  <td><a class="pr" href="https://github.com/Effect-TS/effect/pull/10818">Effect <span>#10818</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="effect-ts/effect" data-status="quiet">
+  <td><a class="pr" href="https://github.com/Effect-TS/effect/pull/10812">Effect <span>#10812</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="effect-ts/effect" data-status="quiet">
+  <td><a class="pr" href="https://github.com/Effect-TS/effect/pull/10811">Effect <span>#10811</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="effect-ts/effect" data-status="quiet">
+  <td><a class="pr" href="https://github.com/Effect-TS/effect/pull/10810">Effect <span>#10810</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="effect-ts/effect" data-status="quiet">
+  <td><a class="pr" href="https://github.com/Effect-TS/effect/pull/10801">Effect <span>#10801</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="effect-ts/effect" data-status="quiet">
+  <td><a class="pr" href="https://github.com/Effect-TS/effect/pull/10757">Effect <span>#10757</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="effect-ts/effect" data-status="quiet">
+  <td><a class="pr" href="https://github.com/Effect-TS/effect/pull/10747">Effect <span>#10747</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="effect-ts/effect" data-status="quiet">
+  <td><a class="pr" href="https://github.com/Effect-TS/effect/pull/10739">Effect <span>#10739</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="effect-ts/effect" data-status="quiet">
+  <td><a class="pr" href="https://github.com/Effect-TS/effect/pull/10718">Effect <span>#10718</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="go-git/go-git" data-status="quiet">
+  <td><a class="pr" href="https://github.com/go-git/go-git/pull/2609">go-git <span>#2609</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="grafana/loki" data-status="quiet">
+  <td><a class="pr" href="https://github.com/grafana/loki/pull/26685">Grafana Loki <span>#26685</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="grafana/loki" data-status="quiet">
+  <td><a class="pr" href="https://github.com/grafana/loki/pull/26683">Grafana Loki <span>#26683</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="grafana/loki" data-status="quiet">
+  <td><a class="pr" href="https://github.com/grafana/loki/pull/26644">Grafana Loki <span>#26644</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="grafana/loki" data-status="quiet">
+  <td><a class="pr" href="https://github.com/grafana/loki/pull/26641">Grafana Loki <span>#26641</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="grpc/grpc" data-status="quiet">
+  <td><a class="pr" href="https://github.com/grpc/grpc/pull/43989">gRPC <span>#43989</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="helix-editor/helix" data-status="quiet">
+  <td><a class="pr" href="https://github.com/helix-editor/helix/pull/16491">Helix <span>#16491</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/iceberg-rust" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/iceberg-rust/pull/3756">Iceberg Rust <span>#3756</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/iceberg-rust" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/iceberg-rust/pull/3732">Iceberg Rust <span>#3732</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/jackrabbit-oak" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/jackrabbit-oak/pull/3313">Jackrabbit Oak <span>#3313</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/lucene" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/lucene/pull/17067">Lucene <span>#17067</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/lucene" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/lucene/pull/17060">Lucene <span>#17060</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/lucene" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/lucene/pull/17053">Lucene <span>#17053</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/lucene" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/lucene/pull/17047">Lucene <span>#17047</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="n8n-io/n8n" data-status="quiet">
+  <td><a class="pr" href="https://github.com/n8n-io/n8n/pull/43732">n8n <span>#43732</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="nushell/nushell" data-status="quiet">
+  <td><a class="pr" href="https://github.com/nushell/nushell/pull/19647">Nushell <span>#19647</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="nushell/nushell" data-status="quiet">
+  <td><a class="pr" href="https://github.com/nushell/nushell/pull/19642">Nushell <span>#19642</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="nushell/nushell" data-status="quiet">
+  <td><a class="pr" href="https://github.com/nushell/nushell/pull/19625">Nushell <span>#19625</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="nushell/nushell" data-status="quiet">
+  <td><a class="pr" href="https://github.com/nushell/nushell/pull/19623">Nushell <span>#19623</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/paimon" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/paimon/pull/11303">Apache Paimon <span>#11303</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/paimon" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/paimon/pull/11296">Apache Paimon <span>#11296</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/parquet-java" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/parquet-java/pull/3990">Parquet Java <span>#3990</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="apache/parquet-java" data-status="quiet">
+  <td><a class="pr" href="https://github.com/apache/parquet-java/pull/3989">Parquet Java <span>#3989</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="pola-rs/polars" data-status="quiet">
+  <td><a class="pr" href="https://github.com/pola-rs/polars/pull/30901">Polars <span>#30901</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="prometheus/prometheus" data-status="quiet">
+  <td><a class="pr" href="https://github.com/prometheus/prometheus/pull/20552">Prometheus <span>#20552</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="prometheus/prometheus" data-status="quiet">
+  <td><a class="pr" href="https://github.com/prometheus/prometheus/pull/20551">Prometheus <span>#20551</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="prometheus/prometheus" data-status="quiet">
+  <td><a class="pr" href="https://github.com/prometheus/prometheus/pull/20549">Prometheus <span>#20549</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="prometheus/prometheus" data-status="quiet">
+  <td><a class="pr" href="https://github.com/prometheus/prometheus/pull/20530">Prometheus <span>#20530</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="prometheus/prometheus" data-status="quiet">
+  <td><a class="pr" href="https://github.com/prometheus/prometheus/pull/20525">Prometheus <span>#20525</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="prometheus/prometheus" data-status="quiet">
+  <td><a class="pr" href="https://github.com/prometheus/prometheus/pull/20515">Prometheus <span>#20515</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="prometheus/prometheus" data-status="quiet">
+  <td><a class="pr" href="https://github.com/prometheus/prometheus/pull/20512">Prometheus <span>#20512</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="prometheus/prometheus" data-status="quiet">
+  <td><a class="pr" href="https://github.com/prometheus/prometheus/pull/20504">Prometheus <span>#20504</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="pytorch/pytorch" data-status="quiet">
+  <td><a class="pr" href="https://github.com/pytorch/pytorch/pull/205755">PyTorch <span>#205755</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="sgl-project/sglang" data-status="quiet">
+  <td><a class="pr" href="https://github.com/sgl-project/sglang/pull/51820">SGLang <span>#51820</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="temporalio/temporal" data-status="quiet">
+  <td><a class="pr" href="https://github.com/temporalio/temporal/pull/13293">Temporal <span>#13293</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="temporalio/temporal" data-status="quiet">
+  <td><a class="pr" href="https://github.com/temporalio/temporal/pull/13225">Temporal <span>#13225</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="temporalio/temporal" data-status="quiet">
+  <td><a class="pr" href="https://github.com/temporalio/temporal/pull/13224">Temporal <span>#13224</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="temporalio/temporal" data-status="quiet">
+  <td><a class="pr" href="https://github.com/temporalio/temporal/pull/13212">Temporal <span>#13212</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="temporalio/temporal" data-status="quiet">
+  <td><a class="pr" href="https://github.com/temporalio/temporal/pull/13171">Temporal <span>#13171</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="temporalio/temporal" data-status="quiet">
+  <td><a class="pr" href="https://github.com/temporalio/temporal/pull/13134">Temporal <span>#13134</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="tokio-rs/tokio" data-status="quiet">
+  <td><a class="pr" href="https://github.com/tokio-rs/tokio/pull/8819">Tokio <span>#8819</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="tokio-rs/tokio" data-status="quiet">
+  <td><a class="pr" href="https://github.com/tokio-rs/tokio/pull/8807">Tokio <span>#8807</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="trinodb/trino" data-status="quiet">
+  <td><a class="pr" href="https://github.com/trinodb/trino/pull/32264">Trino <span>#32264</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="trinodb/trino" data-status="quiet">
+  <td><a class="pr" href="https://github.com/trinodb/trino/pull/32239">Trino <span>#32239</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+<tr data-project="vllm-project/vllm" data-status="quiet">
+  <td><a class="pr" href="https://github.com/vllm-project/vllm/pull/68866">vLLM <span>#68866</span></a></td>
+  <td><span class="status quiet">No comment</span></td>
+  <td><span aria-label="No public comment">—</span></td>
+</tr>
+          </tbody>
+        </table>
+      </details>
+      <p class="empty" id="empty" hidden>No reviews match these filters.</p>
+    </div>
+  </section>
+  <section class="scope" aria-labelledby="scope-title">
+    <h2 id="scope-title">How I counted the reviews</h2>
+    <div>
+      <p>Each primary PR counts once. The total excludes follow-up changes and standalone issues. Confirmed or acted on includes cases where an author or maintainer verified the concern, changed code or tests, or documented a limitation.</p>
+      <p>I use AI to explore code paths and check claims against the source. I run focused tests in isolation where practical and send feedback when I have a specific point the author can check.</p>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="wrap">
+    <span><a href="https://github.com/shihchengwei-lab">shihchengwei-lab</a> · Taiwan · <a href="mailto:shihchengwei@gmail.com">shihchengwei@gmail.com</a></span>
+    <a href="#top">Back to top</a>
+  </div>
+</footer>
+<script>
+  const form = document.querySelector("#filters");
+  const query = document.querySelector("#query");
+  const project = document.querySelector("#project");
+  const outcome = document.querySelector("#outcome");
+  const count = document.querySelector("#count");
+  const empty = document.querySelector("#empty");
+  const commented = document.querySelector("#commented-reviews");
+  const quiet = document.querySelector("#quiet-reviews");
+  const quietCount = document.querySelector("#quiet-count");
+  const shortcutToggle = document.querySelector("#shortcut-toggle");
+  const shortcutHelp = document.querySelector("#shortcut-help");
+  const projectNames = new Map();
+  const reviews = Array.from(document.querySelectorAll("tbody tr"), row => {
+    const { project: repository, status } = row.dataset;
+    const link = row.querySelector(".pr");
+    if (!projectNames.has(repository)) {
+      projectNames.set(repository, link.firstChild.textContent.trim());
+    }
+    return { row, link, project: repository, status, search: (link.textContent + " " + repository).toLowerCase() };
+  });
+  const projectOptions = [...projectNames].sort(([, a], [, b]) => a.localeCompare(b, "en"));
+  project.append(...projectOptions.map(([repository, name]) => new Option(name, repository)));
+
+  function updateResults() {
+    const terms = query.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    let commentedMatches = 0;
+    let quietMatches = 0;
+    for (const review of reviews) {
+      const matches = (!project.value || review.project === project.value) &&
+        (!outcome.value || review.status === outcome.value) &&
+        terms.every(term => review.search.includes(term));
+      review.row.hidden = !matches;
+      if (!matches) continue;
+      if (review.status === "quiet") quietMatches += 1;
+      else commentedMatches += 1;
+    }
+    const totalMatches = commentedMatches + quietMatches;
+    count.textContent = totalMatches + " of " + reviews.length + " reviews match";
+    commented.hidden = commentedMatches === 0;
+    quiet.hidden = quietMatches === 0;
+    quietCount.textContent = quietMatches;
+    if (quietMatches && (terms.length || project.value || outcome.value)) quiet.open = true;
+    empty.hidden = totalMatches > 0;
+  }
+
+  form.addEventListener("submit", event => event.preventDefault());
+  form.addEventListener("reset", event => {
+    event.preventDefault();
+    query.value = "";
+    project.value = "";
+    outcome.value = "";
+    updateResults();
+  });
+  query.addEventListener("input", updateResults);
+  query.addEventListener("keydown", event => {
+    if (event.key !== "Escape" || event.isComposing || !query.value) return;
+    event.preventDefault();
+    query.value = "";
+    updateResults();
+  });
+  project.addEventListener("change", updateResults);
+  outcome.addEventListener("change", updateResults);
+  shortcutToggle.addEventListener("click", () => {
+    const enabled = shortcutToggle.getAttribute("aria-pressed") !== "true";
+    shortcutToggle.setAttribute("aria-pressed", String(enabled));
+    shortcutHelp.hidden = !enabled;
+    if (enabled) query.setAttribute("aria-keyshortcuts", "/");
+    else query.removeAttribute("aria-keyshortcuts");
+  });
+  document.addEventListener("keydown", event => {
+    if (shortcutToggle.getAttribute("aria-pressed") !== "true") return;
+    if (event.defaultPrevented || event.isComposing || event.altKey || event.ctrlKey || event.metaKey) return;
+    const { key, target } = event;
+    if (key !== "/" && key !== "j" && key !== "k") return;
+    if (target instanceof Element && target.closest("input, select, textarea, [contenteditable]")) return;
+
+    if (key === "/") {
+      event.preventDefault();
+      query.focus();
+      return;
+    }
+
+    const visible = reviews.filter(({ row, status }) => !row.hidden && (status !== "quiet" || quiet.open));
+    if (!visible.length) return;
+    event.preventDefault();
+    const current = visible.findIndex(({ row }) => row.contains(document.activeElement));
+    const next = current === -1
+      ? (key === "j" ? 0 : visible.length - 1)
+      : current + (key === "j" ? 1 : -1);
+    visible[next]?.link.focus();
+  });
+  form.hidden = false;
+  updateResults();
+</script>
+<script>
+  console.info("You found the review notes. Expand either group for the findings and the browser checks.");
+
+  console.groupCollapsed("arc9 | Review of 911eaef");
+  console.info("Verdict: The portfolio was ready to share. The index and featured cases pointed to their original PRs. Three interaction issues remained.");
+  console.info("Clear filters: After a search for #46310, clicking the reset button or pressing Enter on it cleared the fields but left one result visible. The page read the old values before the browser finished resetting the form.");
+  console.info("Keyboard shortcuts: Outside form fields and other editable areas, j, k, and / could move focus from anywhere on the page. There was no way to turn them off.");
+  console.info("Filter labels: The Project and Outcome controls were too narrow for some selected labels. Clipping happened on phones and at some desktop widths.");
+  console.groupEnd();
+
+  console.groupCollapsed("reprokadabra | Repair plan and checks at 4754fcc");
+  console.info("Reset: One handler clears all three fields, then immediately recomputes the result list. The check reads both fields and rows during the reset event. A cosmetic count update or a delayed refresh would miss that check.");
+  console.info("Shortcuts: A keyboard-operable toggle controls j, k, and / together. With it off, none of the three keys is intercepted. With it on, / focuses search and j/k move between visible rows.");
+  console.info("Layout: Both selects get enough space for their labels and stack when needed. The check measures the available text space against the longest label in each select, including near layout breakpoints.");
+  console.info("Verified in Windows Chrome: Mouse and keyboard reset restored all 160 matches. The shortcut toggle, 12 viewport widths from 320 to 1440 CSS pixels, and all 240 project/outcome filter combinations passed.");
+  console.groupEnd();
+  console.info(
+    "Known concurrency bug: Static snapshot (%c20 confirmed%c) raced with upstream maintainers (%c22 confirmed%c before deploy).",
+    "font-weight: bold", "", "font-weight: bold", ""
+  );
+</script>
+</body>
+</html>
