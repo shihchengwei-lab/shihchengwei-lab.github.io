@@ -185,6 +185,9 @@
   .benchmark .results th:first-child { width: 46%; }
   .benchmark .results th:nth-child(2) { width: 26%; }
   .benchmark .results td:last-child { font-variant-numeric: tabular-nums; }
+  .benchmark .stats p { overflow-wrap: anywhere; }
+  .benchmark .result-notes { margin-top: .75rem; color: var(--muted); font-size: .86rem; }
+  .benchmark .result-notes p + p { margin-top: .45rem; }
   .benchmark .sample-index { margin-top: .9rem; border-block: 1px solid var(--rule); }
   .benchmark .sample-index table th:first-child { width: 3em; }
   .benchmark .sample-index table th:nth-child(2) { width: auto; }

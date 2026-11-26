@@ -21,7 +21,7 @@
     </div>
     <p class="eyebrow">Review capability evaluation · November 2026</p>
     <h1>What did arc9 find after Greptile cleared 100 PRs?</h1>
-    <p class="intro">I gave arc9 the revisions that Greptile had cleared. It found six defects across five PRs that warranted a fix before delivery. All five PRs were in the first half of the evaluation.</p>
+    <p class="intro">I gave arc9 the revisions that Greptile had cleared. It found six defects across five pull requests (PRs). All five PRs warranted fixes before delivery and came from the first half of the evaluation.</p>
     <div class="stats" aria-label="Evaluation outcome summary">
       <div><strong>5 / 100</strong><p>PRs with additional P2+ findings</p></div>
       <div><strong>5</strong><p>Greptile-only findings in cases 51–100</p></div>
@@ -38,42 +38,49 @@
         <tr><th scope="row">Additional arc9 findings rated P2+</th><td>1–100</td><td>5 PRs, 6 findings</td></tr>
         <tr><th scope="row">Additional arc9 findings rated P3</th><td>61–100</td><td>31 findings</td></tr>
         <tr><th scope="row">Greptile findings missed by arc9</th><td>51–100</td><td>5 findings, all P3</td></tr>
-        <tr><th scope="row">Findings both reviewers missed</th><td>Documented cases</td><td>3 findings, 1 P2</td></tr>
+        <tr><th scope="row">Findings both reviewers missed</th><td>Logged cases, starting at 81</td><td>3 findings, 1 P2</td></tr>
       </tbody>
     </table>
+    <div class="result-notes">
+      <p><strong>How 5 / 100 was counted.</strong> Of the 100 PRs Greptile cleared, 99 completed arc9’s first review. A PR counted once if arc9’s completed first review flagged a defect that Greptile missed on the same revision, the defect had checkable reproduction evidence from that revision, and this evaluation rated it P2 or higher.</p>
+      <p><strong>Cases 1–50.</strong> A look back at public feedback found three issues arc9 omitted (<a href="https://github.com/omacom/omarchy-iso/pull/530#discussion_r4702594980">install diagnostics (case 9)</a>, <a href="https://github.com/omacom/omarchy-pkgs/pull/3583#discussion_r4702446692">test wait time (33)</a>, <a href="https://github.com/tetherto/qvac/pull/5987#discussion_r4702441621">vector result ordering (37)</a>) and two it marked for follow-up (<a href="https://github.com/AgentWorkforce/relayhistory/pull/602#discussion_r4702541493">query index efficiency (31)</a>, <a href="https://github.com/tetherto/qvac/pull/5987#discussion_r4702441608">migration URL (37)</a>). The evaluation kept these five observations separate from the matched comparison for cases 51–100.</p>
+      <p><strong>Cases 51–100.</strong> The five Greptile-only findings concerned <a href="https://github.com/WenyuChiou/agent-board/pull/1875#discussion_r4702369571">keyboard focus (case 56)</a>, a <a href="https://github.com/metalbear-co/mirrord/pull/5342#discussion_r4702352943">missing setup requirement (72)</a>, <a href="https://github.com/metalbear-co/mirrord/blob/2293c687cfedd893c637a4ce72aed4487826bda5/mirrord/cli/src/replay.rs#L280">terminal text display (73)</a>, an <a href="https://github.com/metalbear-co/mirrord/pull/5339#discussion_r4702365889">incomplete request label (74)</a>, and a <a href="https://github.com/sheprd-labs/sheprd/pull/1664#discussion_r4702263941">missing connection diagnostic (96)</a>.</p>
+      <p><strong>Misses by both reviewers.</strong> Starting at case 81, the evaluation logged these individually when a public follow-up comment or commit supplied evidence that could be checked. The three recorded cases are listed below.</p>
+    </div>
   </section>
   <section class="section" aria-labelledby="cases-title">
     <h2 id="cases-title">Five PRs that warranted a fix</h2>
     <div class="cases">
       <article class="case">
-        <p class="eyebrow">pnpm · Migration instructions</p>
+        <p class="eyebrow">Case 18 · pnpm · Migration instructions</p>
         <h3>A reinstall left dependencies in the old location.</h3>
         <p>An isolated run showed that changing the setting and reinstalling left dependencies at the workspace root. A clean reinstall put them where the Electron app needed them.</p>
-        <a href="https://github.com/pnpm/pnpm/pull/18461#discussion_r4702778291">PR discussion · #18461</a>
+        <div class="case-links"><a href="https://github.com/pnpm/pnpm/blob/f652cd2ab456389a1ef3782b24be779d76a6f825/pnpm/docs/electron.md#L58">Reviewed instructions</a><a href="https://github.com/pnpm/pnpm/pull/18461#discussion_r4702778291">Follow-up discussion</a><a href="https://github.com/pnpm/pnpm/pull/18461#issuecomment-7179183694">Greptile clearance</a></div>
       </article>
       <article class="case">
-        <p class="eyebrow">Mirage · Integration setup</p>
+        <p class="eyebrow">Case 27 · Mirage · Integration setup</p>
         <h3>The desktop instructions could lead to the wrong workspace.</h3>
-        <p>The CLI reused the current connection even when the instructions described a local workspace. A separate setup path also omitted a required server-side setting.</p>
-        <a href="https://github.com/strukto-ai/mirage/pull/2446">Pull request · #2446</a>
+        <p>In an isolated check, the desktop steps used the already selected remote workspace. Switching the CLI back to local selected the local workspace.</p>
+        <p>In a separate check, the server rejected a custom public hostname with its default settings. It accepted the hostname after it was added to the allowlist, a step missing from the web setup guide.</p>
+        <div class="case-links"><a href="https://github.com/strukto-ai/mirage/blob/b8d42ab2e57d38532faa7b596dded07b3241b1a3/docs/home/agents/lobehub.mdx#L37-L54">Reviewed desktop steps</a><a href="https://github.com/strukto-ai/mirage/blob/b8d42ab2e57d38532faa7b596dded07b3241b1a3/docs/home/agents/lobehub.mdx#L62-L80">Reviewed web steps</a><a href="https://github.com/strukto-ai/mirage/blob/b8d42ab2e57d38532faa7b596dded07b3241b1a3/docs/home/access/http.mdx#L69">Hostname requirement</a><a href="https://github.com/strukto-ai/mirage/pull/2446#issuecomment-7179024668">Greptile clearance</a></div>
       </article>
       <article class="case">
-        <p class="eyebrow">Streamplace · Build reuse</p>
+        <p class="eyebrow">Case 32 · Streamplace · Build reuse</p>
         <h3>A change to a frontend hook could leave the old app running.</h3>
-        <p>The build script did not include the hook directory in its change check. An isolated run reused the old frontend after an edit there.</p>
-        <a href="https://github.com/streamplace/streamplace/blob/81471ef23f57f7afb8b06427ccdde8af68831094/hack/lib/frontend-inputs.sh#L6">Input list at the reviewed revision</a>
+        <p>The build script’s change check omitted the hook directory. In an isolated run, editing a hook reused the old frontend. An edit in the tracked source directory triggered a rebuild.</p>
+        <div class="case-links"><a href="https://github.com/streamplace/streamplace/blob/81471ef23f57f7afb8b06427ccdde8af68831094/hack/lib/frontend-inputs.sh#L6">Input list at the reviewed revision</a><a href="https://github.com/streamplace/streamplace/pull/1499#issuecomment-7178635914">Greptile clearance</a></div>
       </article>
       <article class="case">
-        <p class="eyebrow">QVAC · TypeScript integration</p>
+        <p class="eyebrow">Case 37 · QVAC · TypeScript integration</p>
         <h3>The API reference named a type the SDK did not export.</h3>
-        <p>Compiling against the published SDK reproduced the missing export. The package exposed a different type.</p>
-        <a href="https://github.com/tetherto/qvac/pull/5987">Pull request · #5987</a>
+        <p>Against the published <code>@qvac/rag</code> 0.11.0 package, importing the documented <code>IngestDocument</code> failed with TypeScript error TS2724. The SDK accepted <code>DocumentInput[]</code>.</p>
+        <div class="case-links"><a href="https://github.com/tetherto/qvac/blob/0f3e93d11adb2af1b709520272da4cffb9a22aa5/docs/website/content/docs/rag/(v0.11)/api-reference.mdx#L55">Reviewed API reference</a><a href="https://github.com/tetherto/qvac/blob/1eea1821a2b7fb6acf0d1e99cc0073ebeb66738d/packages/rag/src/types.ts#L103">SDK type definition</a><a href="https://github.com/tetherto/qvac/pull/5987#issuecomment-7178603850">Greptile clearance</a></div>
       </article>
       <article class="case">
-        <p class="eyebrow">Onyx · Extension contract</p>
+        <p class="eyebrow">Case 39 · Onyx · Extension contract</p>
         <h3>A normal request passed a list to a handler promised a tuple.</h3>
         <p>An isolated check showed that a handler following the documented contract rejected the reviewed version and accepted the baseline.</p>
-        <a href="https://github.com/onyx-dot-app/onyx/commit/c704984e53231ecb47db27c3b4d42bd051079822">Follow-up change</a>
+        <div class="case-links"><a href="https://github.com/onyx-dot-app/onyx/blob/217a8fadbeb37a8bbecf02fca74bdeeae200ea15/backend/onyx/agents/models.py#L239">Reviewed handler contract</a><a href="https://github.com/onyx-dot-app/onyx/blob/217a8fadbeb37a8bbecf02fca74bdeeae200ea15/backend/onyx/agents/runtime.py#L2152">Reviewed call site</a><a href="https://github.com/onyx-dot-app/onyx/pull/18570#issuecomment-7178589529">Greptile clearance</a><a href="https://github.com/onyx-dot-app/onyx/commit/c704984e53231ecb47db27c3b4d42bd051079822">Follow-up change</a></div>
       </article>
     </div>
   </section>
@@ -81,12 +88,12 @@
     <h2 id="misses-title">What both reviewers missed</h2>
     <div class="cases">
       <article class="case">
-        <h3>A Docker build excluded code the API needed.</h3>
+        <h3>Case 89 · A Docker build excluded code the API needed.</h3>
         <p>The ignore rule matched the path of a new source directory. The API image failed to compile. The merged revision moved the directory and updated its imports.</p>
         <div class="case-links"><a href="https://github.com/ever-co/ever-rec/pull/263#issuecomment-7179740351">Same-revision build evidence</a><a href="https://github.com/ever-co/ever-rec/commit/4e01f3c1da3aae7678e241bec6aa6be3c3ce32ec">Merged fix</a></div>
       </article>
       <article class="case">
-        <h3>Two smaller misses affected testing and failure reporting.</h3>
+        <h3>Cases 90 and 99 · Two smaller misses affected testing and failure reporting.</h3>
         <p>Isaac Lab’s new CPU regression test lacked a marker used to select tests that run without Kit. In qui, a lost reply could make an upload batch look like a confirmed failure even when the server had processed it.</p>
         <div class="case-links"><a href="https://github.com/isaac-sim/IsaacLab/pull/9237#discussion_r4702273894">Isaac Lab test feedback</a><a href="https://github.com/autobrr/qui/pull/4554#discussion_r4702252078">qui batch feedback</a></div>
       </article>
@@ -95,8 +102,7 @@
   <section class="scope" id="method" aria-labelledby="method-title">
     <h2 id="method-title">How I ran the evaluation</h2>
     <p>I selected 100 public PRs across 50 repositories in a fixed GitHub search order. Each had a public Greptile clearance tied to a specific commit. I saved arc9’s first review before reading the public feedback for that revision, then checked findings against the code, focused tests where practical, and evidence from the same revision.</p>
-    <p>I rated a defect P2 when it could cause a supported workflow to fail or require meaningful rework in ordinary use. I counted an additional finding when Greptile's review of the same revision missed it. P3 covers smaller findings. Each PR counts once toward the 5% rate. One first review exceeded the input limit and remains in the denominator. I kept its smaller rerun in a separate record.</p>
-    <p>The first 50 cases primarily validated arc9’s findings. Cases 51–100 used a common standard in both directions. The three misses by both reviewers came from documented third-party findings. These results apply to this sample of PRs Greptile had already cleared.</p>
+    <p>I rated a defect P2 when it could cause a supported workflow to fail or require meaningful rework in ordinary use. P3 covers smaller findings. Case 16 exceeded the input limit and stayed in the denominator. I kept its smaller rerun outside the first-review score. These results apply to the sampled PRs that Greptile had already cleared.</p>
     <p>For cases 81–100, I also pinned the PR description to the clearance date. In case 91, the first pass used a later title. I reran it with the title from the clearance date and excluded the affected judgment from scoring.</p>
   </section>
   <section class="section" id="samples" aria-labelledby="samples-title">
