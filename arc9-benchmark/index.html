@@ -20,13 +20,8 @@
       <nav aria-label="Page navigation"><a href="#results">Results</a><a href="#method">Method</a><a href="#samples">Sample index</a></nav>
     </div>
     <p class="eyebrow">Code review evaluation · November 2026</p>
-    <h1>What did a second code review find?</h1>
-    <p class="intro">I tested arc9 as a second review on 100 public pull requests (PRs) with a favorable Greptile review. I used the same code revision for each comparison.</p>
-    <div class="stats" aria-label="Evaluation outcome summary">
-      <div><strong>5 / 100</strong><p>PRs where arc9 found issues to fix before delivery</p></div>
-      <div><strong>5</strong><p>Findings unique to Greptile in cases 51–100</p></div>
-      <div><strong>3</strong><p>Issues absent from both reviews</p></div>
-    </div>
+    <h1>arc9 found issues worth fixing in 5 of 100 PRs</h1>
+    <p class="intro">I used arc9 for a second review of public pull requests that Greptile said appeared safe to merge.</p>
   </div>
 </header>
 <main class="wrap" id="main" tabindex="-1">
@@ -35,34 +30,32 @@
     <table class="results" aria-labelledby="results-title">
       <thead><tr><th scope="col">Measure</th><th scope="col">Cases</th><th scope="col">Result</th></tr></thead>
       <tbody>
-        <tr><th scope="row">Findings unique to arc9, rated P2 or higher</th><td>1–100</td><td>5 PRs, 6 findings</td></tr>
+        <tr><th scope="row">Findings unique to arc9, rated P2 or higher</th><td>1–100</td><td>6 findings</td></tr>
         <tr><th scope="row">Findings unique to arc9, rated P3</th><td>61–100</td><td>31 findings</td></tr>
         <tr><th scope="row">Findings unique to Greptile</th><td>51–100</td><td>5 findings, all P3</td></tr>
-        <tr><th scope="row">Third-party findings absent from both reviews</th><td>Logged cases, starting at 81</td><td>3 findings, 1 P2</td></tr>
+        <tr><th scope="row">Findings from public follow-up missed by both reviews</th><td>Logged from case 81</td><td>3 findings, 1 P2</td></tr>
       </tbody>
     </table>
     <div class="result-notes">
-      <p><strong>How 5 / 100 was counted.</strong> arc9 completed its first review on 99 of the 100 PRs. I counted a PR once if arc9’s first review identified an issue absent from Greptile’s review of the same revision. Each counted issue had checkable reproduction evidence from that revision and a rating of P2 or higher in this evaluation. All five PRs came from cases 1–50.</p>
-      <p><strong>Severity in this evaluation.</strong> A P2 issue can cause a supported workflow to fail or require meaningful rework in ordinary use. P3 covers smaller issues.</p>
-      <p><strong>Cases 1–50.</strong> A look back at public feedback found three issues arc9 omitted (<a href="https://github.com/omacom/omarchy-iso/pull/530#discussion_r4702594980">install diagnostics (case 9)</a>, <a href="https://github.com/omacom/omarchy-pkgs/pull/3583#discussion_r4702446692">test wait time (33)</a>, <a href="https://github.com/tetherto/qvac/pull/5987#discussion_r4702441621">vector result ordering (37)</a>) and two it marked for follow-up (<a href="https://github.com/AgentWorkforce/relayhistory/pull/602#discussion_r4702541493">query index efficiency (31)</a>, <a href="https://github.com/tetherto/qvac/pull/5987#discussion_r4702441608">migration URL (37)</a>). The evaluation kept these five observations separate from the matched comparison for cases 51–100.</p>
-      <p><strong>Cases 51–100.</strong> I applied the same criteria to findings unique to either tool. Greptile identified five such issues: <a href="https://github.com/WenyuChiou/agent-board/pull/1875#discussion_r4702369571">keyboard focus (case 56)</a>, a <a href="https://github.com/metalbear-co/mirrord/pull/5342#discussion_r4702352943">missing setup requirement (72)</a>, <a href="https://github.com/metalbear-co/mirrord/blob/2293c687cfedd893c637a4ce72aed4487826bda5/mirrord/cli/src/replay.rs#L280">terminal text display (73)</a>, an <a href="https://github.com/metalbear-co/mirrord/pull/5339#discussion_r4702365889">incomplete request label (74)</a>, and a <a href="https://github.com/sheprd-labs/sheprd/pull/1664#discussion_r4702263941">missing connection diagnostic (96)</a>.</p>
-      <p><strong>Third-party findings.</strong> Starting at case 81, I logged individual findings absent from both reviews when a public follow-up comment or commit provided evidence I could check.</p>
+      <p><strong>How the score was counted.</strong> I counted each PR once if arc9’s first review found an issue Greptile missed on the same commit. Qualifying issues needed reproduction evidence from that commit and a rating of P2 or higher. A P2 issue can break a supported workflow or require meaningful rework in ordinary use. P3 covers smaller issues. All five qualifying PRs were in cases 1–50.</p>
+      <p>arc9 completed 99 first reviews. Case 16 hit its input limit and stayed in the denominator of 100. Its smaller rerun was outside the score.</p>
+      <p><strong>Cases 1–50.</strong> A separate look back at public feedback found three omissions (<a href="https://github.com/omacom/omarchy-iso/pull/530#discussion_r4702594980">install diagnostics (9)</a>, <a href="https://github.com/omacom/omarchy-pkgs/pull/3583#discussion_r4702446692">test wait time (33)</a>, <a href="https://github.com/tetherto/qvac/pull/5987#discussion_r4702441621">vector result ordering (37)</a>) and two issues arc9 had marked for follow-up (<a href="https://github.com/AgentWorkforce/relayhistory/pull/602#discussion_r4702541493">query index efficiency (31)</a> and <a href="https://github.com/tetherto/qvac/pull/5987#discussion_r4702441608">migration URL (37)</a>).</p>
+      <p><strong>Cases 51–100.</strong> I applied the same criteria to both tools. Findings unique to Greptile covered <a href="https://github.com/WenyuChiou/agent-board/pull/1875#discussion_r4702369571">keyboard focus (56)</a>, a <a href="https://github.com/metalbear-co/mirrord/pull/5342#discussion_r4702352943">missing setup requirement (72)</a>, <a href="https://github.com/metalbear-co/mirrord/blob/2293c687cfedd893c637a4ce72aed4487826bda5/mirrord/cli/src/replay.rs#L280">terminal text display (73)</a>, an <a href="https://github.com/metalbear-co/mirrord/pull/5339#discussion_r4702365889">incomplete request label (74)</a>, and a <a href="https://github.com/sheprd-labs/sheprd/pull/1664#discussion_r4702263941">missing connection diagnostic (96)</a>.</p>
     </div>
   </section>
   <section class="section" aria-labelledby="cases-title">
-    <h2 id="cases-title">Five PRs where arc9 found issues worth fixing</h2>
+    <h2 id="cases-title">Issues to fix before delivery</h2>
     <div class="cases">
       <article class="case">
         <p class="eyebrow">Case 18 · pnpm · Migration instructions</p>
         <h3>A reinstall left dependencies in the old location.</h3>
-        <p>An isolated run showed that changing the setting and reinstalling left dependencies at the workspace root. A clean reinstall put them where the Electron app needed them.</p>
+        <p>After the setting changed, a reinstall left dependencies at the workspace root in an isolated test. A clean reinstall put them where Electron expected them.</p>
         <div class="case-links"><a href="https://github.com/pnpm/pnpm/blob/f652cd2ab456389a1ef3782b24be779d76a6f825/pnpm/docs/electron.md#L58">Reviewed instructions</a><a href="https://github.com/pnpm/pnpm/pull/18461#discussion_r4702778291">Follow-up discussion</a><a href="https://github.com/pnpm/pnpm/pull/18461#issuecomment-7179183694">Greptile review summary</a></div>
       </article>
       <article class="case">
         <p class="eyebrow">Case 27 · Mirage · Integration setup</p>
         <h3>The desktop instructions could lead to the wrong workspace.</h3>
-        <p>In an isolated check, the desktop steps used the already selected remote workspace. Switching the CLI back to local selected the local workspace.</p>
-        <p>In a separate check, the server rejected a custom public hostname with its default settings. It accepted the hostname after it was added to the allowlist, a step missing from the web setup guide.</p>
+        <p>In isolated checks, the desktop steps reused the selected remote workspace until the CLI was switched back to local. The web setup guide also omitted a required step. The server accepted the public hostname only after it was added to the allowlist.</p>
         <div class="case-links"><a href="https://github.com/strukto-ai/mirage/blob/b8d42ab2e57d38532faa7b596dded07b3241b1a3/docs/home/agents/lobehub.mdx#L37-L54">Reviewed desktop steps</a><a href="https://github.com/strukto-ai/mirage/blob/b8d42ab2e57d38532faa7b596dded07b3241b1a3/docs/home/agents/lobehub.mdx#L62-L80">Reviewed web steps</a><a href="https://github.com/strukto-ai/mirage/blob/b8d42ab2e57d38532faa7b596dded07b3241b1a3/docs/home/access/http.mdx#L69">Hostname requirement</a><a href="https://github.com/strukto-ai/mirage/pull/2446#issuecomment-7179024668">Greptile review summary</a></div>
       </article>
       <article class="case">
@@ -86,7 +79,7 @@
     </div>
   </section>
   <section class="section" aria-labelledby="misses-title">
-    <h2 id="misses-title">Three findings documented by other sources</h2>
+    <h2 id="misses-title">What both reviews missed</h2>
     <div class="cases">
       <article class="case">
         <h3>Case 89 · A Docker build excluded code the API needed.</h3>
@@ -102,10 +95,10 @@
   </section>
   <section class="scope" id="method" aria-labelledby="method-title">
     <h2 id="method-title">How I ran the evaluation</h2>
-    <p>I selected 100 public PRs in a fixed GitHub search order. Each had a public Greptile review saying the reviewed commit appeared safe to merge. I saved arc9’s first review before reading public feedback, then checked its findings against the same revision and ran focused tests where practical.</p>
+    <p>I took eligible PRs in a fixed GitHub search order and saved arc9’s first review before reading public feedback. I checked findings against the reviewed commit and ran focused tests where practical.</p>
     <p><strong>Repository size and type.</strong> The 50 repositories covered AI and agent tools (19), developer tools, infrastructure and SDKs (14), apps, media and visualization (10), desktop, OS and device tools (5), and scientific computing (2). On November 27, 2026, the median GitHub-reported size was about 116 MB and the median star count was about 481.</p>
     <p><strong>PR scope.</strong> The median PR changed four files, and 64 changed five or fewer. Two PRs changed core distributed behavior, both in the same SkyRL training series (<a href="https://github.com/skyrl-project/SkyRL/pull/2824">routing replay</a> and <a href="https://github.com/skyrl-project/SkyRL/pull/2823">cross-node data exchange</a>). Nine others changed coordination between processes or services (cases 15, 52, 53, 67, 73, 74, 85, 99, and 100).</p>
-    <p>Case 16 exceeded arc9’s input limit and stayed in the denominator. Its smaller rerun stayed outside the score. For cases 81–100, I used the descriptions from the time of Greptile’s review. I reran case 91 with the title from that review and excluded the affected first-review judgment.</p>
+    <p>For cases 81–100, I used the PR descriptions from the time of Greptile’s review. I reran case 91 with the title from that review and excluded the affected first-review judgment.</p>
   </section>
   <section class="section" id="samples" aria-labelledby="samples-title">
     <h2 id="samples-title">Sample index</h2>
