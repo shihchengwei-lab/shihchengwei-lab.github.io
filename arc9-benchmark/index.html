@@ -103,7 +103,8 @@
   <section class="scope" id="method" aria-labelledby="method-title">
     <h2 id="method-title">How I ran the evaluation</h2>
     <p>I selected 100 public PRs across 50 repositories in a fixed GitHub search order. Each had a public Greptile summary indicating the PR appeared safe to merge at a specific commit. I saved arc9’s first review before reading the public feedback for that revision, then checked findings against the code, focused tests where practical, and evidence from the same revision.</p>
-    <p>Case 16 exceeded arc9’s input limit and stayed in the denominator. I kept its smaller rerun outside the first-review score. The results describe this sample of PRs selected for having a favorable Greptile review.</p>
+    <p>The median PR changed four files, and 64 of 100 changed five or fewer. Measuring review performance on distributed-system changes would require a sample selected for those changes.</p>
+    <p>Case 16 exceeded arc9’s input limit and stayed in the denominator. I kept its smaller rerun outside the first-review score.</p>
     <p>For cases 81–100, I also used the PR description as it stood when Greptile published its favorable assessment. In case 91, arc9’s first review used a later title. I reran it with the title from the time of Greptile’s review and excluded the affected judgment from scoring.</p>
   </section>
   <section class="section" id="samples" aria-labelledby="samples-title">
