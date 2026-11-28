@@ -1,52 +1,27 @@
   :root {
-    --paper: light-dark(#f9f8f6, #161616);
-    --ink: light-dark(#1a1918, #dedede);
-    --muted: light-dark(#66645e, #a6a6a6);
-    --rule: light-dark(#e2e0d8, #363636);
-    --surface: light-dark(#f0eee9, #232323);
-    --control: light-dark(#858179, #858585);
+    --paper: #f9f8f6;
+    --ink: #1a1918;
+    --muted: #66645e;
+    --rule: #e2e0d8;
+    --surface: #f0eee9;
+    --control: #858179;
     --measure: 35rem;
     --sans: Inter, "Segoe UI", system-ui, sans-serif;
     --mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
-    color-scheme: light dark;
+    color-scheme: light;
     font: clamp(1.125rem, .96rem + .6vw, 1.375rem)/1.7 var(--sans);
   }
 
-  :root[data-theme="light"] { color-scheme: light; }
-  :root[data-theme="dark"] { color-scheme: dark; }
-
-  #theme-cord {
-    position: absolute;
-    top: 0;
-    right: clamp(8px, 2vw, 32px);
-    display: grid;
-    place-items: end center;
-    width: 44px;
-    height: 64px;
-    padding: 0 0 4px;
-    border: 0;
-    background: transparent;
-    color: var(--muted);
-    cursor: pointer;
-    touch-action: manipulation;
-  }
-  #theme-cord::before {
-    content: "";
-    position: absolute;
-    bottom: 36px;
-    left: 50%;
-    height: 48px;
-    border-left: 1px solid currentColor;
-  }
-  #theme-cord:is(:hover, :focus-visible) { color: var(--ink); }
-  #theme-cord[aria-pressed="true"] .shadow { transform: translate(-8.5px, -3px); }
-  #theme-cord[aria-pressed="true"] .rays { opacity: 0; }
-  @media (prefers-reduced-motion: no-preference) {
-    #theme-cord .shadow { transition: transform .24s ease; }
-    #theme-cord .rays { transition: opacity .24s ease; }
-  }
-  @media (max-width: 960px) {
-    header:has(#theme-cord:not([hidden])) .topbar { padding-right: 44px; }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #161616;
+      --ink: #dedede;
+      --muted: #a6a6a6;
+      --rule: #363636;
+      --surface: #232323;
+      --control: #858585;
+      color-scheme: dark;
+    }
   }
 
   *, *::before, *::after { box-sizing: border-box; }
