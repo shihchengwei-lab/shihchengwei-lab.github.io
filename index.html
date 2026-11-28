@@ -5,15 +5,41 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="./favicon.ico?v=1" sizes="16x16 32x32 48x48">
 <meta name="robots" content="noindex, follow">
-<meta name="theme-color" content="#f9f8f6" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#161616" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" data-scheme="light" content="#f9f8f6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" data-scheme="dark" content="#161616" media="(prefers-color-scheme: dark)">
 <meta name="description" content="160 open-source pull request reviews by shihchengwei-lab, with six selected cases and links to the original evidence.">
 <title>160 Open-Source PR Reviews | shihchengwei-lab</title>
+<script>
+  const systemTheme = matchMedia("(prefers-color-scheme: dark)");
+  const themeKey = "portfolio-theme";
+  function applyTheme(choice) {
+    const root = document.documentElement;
+    if (choice === "dark" || choice === "light") root.dataset.theme = choice;
+    else delete root.dataset.theme;
+    const dark = root.dataset.theme ? root.dataset.theme === "dark" : systemTheme.matches;
+    document.querySelectorAll('meta[name="theme-color"]').forEach(meta => {
+      meta.media = meta.dataset.scheme === (dark ? "dark" : "light") ? "all" : "not all";
+    });
+    document.getElementById("theme-cord")?.setAttribute("aria-pressed", String(dark));
+  }
+  function loadTheme() {
+    try { applyTheme(localStorage.getItem(themeKey)); }
+    catch { applyTheme(document.documentElement.dataset.theme); }
+  }
+  loadTheme();
+</script>
 <link rel="stylesheet" href="./site.css">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header id="top" tabindex="-1">
+  <button id="theme-cord" type="button" aria-label="Dark mode" title="Toggle dark mode" hidden>
+    <svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true">
+      <defs><mask id="eclipse"><rect width="32" height="32" fill="white"/><circle class="shadow" cx="30" cy="16" r="6.5"/></mask></defs>
+      <path class="rays" d="M16 2v3.5 M16 26.5V30 M2 16h3.5 M26.5 16H30 M6.1 6.1l2.5 2.5 M23.4 23.4l2.5 2.5 M6.1 25.9l2.5-2.5 M23.4 8.6l2.5-2.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <circle cx="16" cy="16" r="7" fill="currentColor" mask="url(#eclipse)"/>
+    </svg>
+  </button>
   <div class="wrap">
     <div class="topbar">
       <a class="handle" href="https://github.com/shihchengwei-lab">shihchengwei-lab</a>
@@ -929,6 +955,26 @@
     <a href="#top">Back to top</a>
   </div>
 </footer>
+<script>
+  const cord = document.getElementById("theme-cord");
+  applyTheme(document.documentElement.dataset.theme);
+  cord.hidden = false;
+  cord.addEventListener("click", () => {
+    const next = cord.getAttribute("aria-pressed") === "true" ? "light" : "dark";
+    applyTheme(next);
+    try { localStorage.setItem(themeKey, next); } catch { /* This tab still keeps the choice. */ }
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      cord.getAnimations().forEach(animation => animation.cancel());
+      cord.animate([{ transform: "translateY(0)" }, { transform: "translateY(9px)", offset: .3 },
+        { transform: "translateY(-2px)", offset: .7 }, { transform: "translateY(0)" }], 320);
+    }
+  });
+  systemTheme.addEventListener("change", () => applyTheme(document.documentElement.dataset.theme));
+  window.addEventListener("storage", event => {
+    if (event.key === themeKey || event.key === null) loadTheme();
+  });
+  window.addEventListener("pageshow", event => { if (event.persisted) loadTheme(); });
+</script>
 <script>
   const form = document.querySelector("#filters");
   const query = document.querySelector("#query");
