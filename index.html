@@ -953,6 +953,8 @@
   const projectOptions = [...projectNames].sort(([, a], [, b]) => a.localeCompare(b, "en"));
   project.append(...projectOptions.map(([repository, name]) => new Option(name, repository)));
 
+  let quietOpenBeforeFiltering = null;
+
   function updateResults() {
     const terms = query.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
     let commentedMatches = 0;
@@ -971,7 +973,13 @@
     commented.hidden = commentedMatches === 0;
     quiet.hidden = quietMatches === 0;
     quietCount.textContent = quietMatches;
-    if (quietMatches && (terms.length || project.value || outcome.value)) quiet.open = true;
+    if (terms.length || project.value || outcome.value) {
+      quietOpenBeforeFiltering ??= quiet.open;
+      if (quietMatches) quiet.open = true;
+    } else if (quietOpenBeforeFiltering !== null) {
+      quiet.open = quietOpenBeforeFiltering;
+      quietOpenBeforeFiltering = null;
+    }
     empty.hidden = totalMatches > 0;
   }
 
@@ -1025,7 +1033,7 @@
   updateResults();
 </script>
 <script>
-  console.info("You found the review notes. Expand either group for the findings and the browser checks.");
+  console.info("You found the review notes. Expand a group for the findings, browser checks, or launch story.");
 
   console.groupCollapsed("arc9 | Review of 911eaef");
   console.info("Verdict: The portfolio was ready to share. The index and featured cases pointed to their original PRs. Three interaction issues remained.");
@@ -1040,10 +1048,12 @@
   console.info("Layout: Both selects get enough space for their labels and stack when needed. The check measures the available text space against the longest label in each select, including near layout breakpoints.");
   console.info("Verified in Windows Chrome: Mouse and keyboard reset restored all 160 matches. The shortcut toggle, 12 viewport widths from 320 to 1440 CSS pixels, and all 240 project/outcome filter combinations passed.");
   console.groupEnd();
+  console.groupCollapsed("Launch notes | November 25, 2026 (003e59d)");
   console.info(
-    "Known concurrency bug: Static snapshot (%c20 confirmed%c) raced with upstream maintainers (%c22 confirmed%c before deploy).",
+    "Our first concurrency bug: the static snapshot (%c20 confirmed%c) raced with upstream maintainers (%c22 confirmed%c before deploy).",
     "font-weight: bold", "", "font-weight: bold", ""
   );
+  console.groupEnd();
 </script>
 </body>
 </html>
