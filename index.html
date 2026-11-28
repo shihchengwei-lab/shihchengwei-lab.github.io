@@ -37,8 +37,8 @@
     <div class="cases">
       <article class="case" id="dify" aria-labelledby="dify-title">
         <p class="eyebrow">Dify · Queue reliability</p>
-        <h3 id="dify-title">A queue fix still left two handoff gaps.</h3>
-        <p>I flagged two cases that could leave queued work stalled or handled by conflicting workers. The author confirmed both as blockers. The PR later closed without merging.</p>
+        <h3 id="dify-title">A job could arrive just after the last worker left.</h3>
+        <p>I traced two ways the handoff could fail. A worker could find the queue empty just before another job arrived, leaving nobody to pick it up. A worker whose claim had expired could also erase its successor’s claim. The author confirmed both blockers. The PR closed without merging.</p>
         <div class="case-links">
           <a href="https://github.com/langgenius/dify/pull/46310#issuecomment-6981994924">My review · #46310</a>
           <a href="https://github.com/langgenius/dify/pull/46310#issuecomment-6992254631">Author’s response · #46310</a>
@@ -46,32 +46,32 @@
       </article>
       <article class="case">
         <p class="eyebrow">Apache DataFusion · Query ordering</p>
-        <h3>A query returned rows in the wrong order.</h3>
-        <p>I reported a small example that returned two rows out of order. The author reproduced it and opened a separate fix with tests.</p>
+        <h3>Two rows were enough to show a missing sort.</h3>
+        <p>My two-row CSV sorted to <code>1, 2</code> before the patch. With the same query, the patch skipped the sort and returned <code>2, 1</code>. The author reproduced it, showed that the underlying bug already existed on <code>main</code>, and opened a separate fix.</p>
         <a href="https://github.com/apache/datafusion/pull/27597#issuecomment-7049002958">Author’s response · #27597</a>
       </article>
       <article class="case">
         <p class="eyebrow">Apache Iceberg Go · Write retries</p>
-        <h3>A retry reported failure after the write succeeded.</h3>
-        <p>My test showed that a client could report a failed save even though the server had already applied the write. The author updated the retry logic so it reports an uncertain outcome when it can no longer verify the write.</p>
+        <h3>The write succeeded. The client reported failure.</h3>
+        <p>My test server saved the change and dropped the connection before replying. The client retried after the one-second retry window had closed and reported a failed write. The author changed the client to recheck the deadline and report an unknown outcome when the window expires.</p>
         <a href="https://github.com/apache/iceberg-go/pull/2679#issuecomment-7136908103">Author’s response · #2679</a>
       </article>
       <article class="case">
         <p class="eyebrow">Apache Flink · Saved query plans</p>
-        <h3>A query ran directly but failed from a saved plan.</h3>
-        <p>I checked both execution paths. The author confirmed that loading the saved plan picked the wrong function signature and said they would try a separate fix.</p>
+        <h3>The same query failed only after I saved and reloaded its plan.</h3>
+        <p>Calling <code>UNIX_TIMESTAMP(ts)</code> worked directly. When Flink loaded the saved plan, it picked the version of the function that takes no arguments. The job failed before it started. The author confirmed the cause and proposed a separate fix.</p>
         <a href="https://github.com/apache/flink/pull/30080#issuecomment-7151901415">Author’s response · #30080</a>
       </article>
       <article class="case">
         <p class="eyebrow">Apache Spark · SQL diagnostics</p>
-        <h3>A SQL error pointed to the wrong line.</h3>
-        <p>I found a mismatch in where the parser marked the error. The author corrected the highlighted location and added tests for both execution paths.</p>
+        <h3>The parser had the right position and drew the arrow on the wrong line.</h3>
+        <p>I put a newline in one parameter and an invalid value in the next. The parser located <code>:second</code> in my original SQL but drew the arrow on the expanded query. Through <code>spark.sql</code>, the whole query was underlined. The author fixed both paths and added tests.</p>
         <a href="https://github.com/apache/spark/pull/60724#issuecomment-7112147391">Author’s response · #60724</a>
       </article>
       <article class="case">
         <p class="eyebrow">ClickHouse · Query correctness</p>
-        <h3>A query could skip matching rows.</h3>
-        <p>I flagged a mismatch between the query and its text index. The author confirmed the missing rows, fixed the PR, and added a regression test.</p>
+        <h3>Three trailing zeros could hide a matching row.</h3>
+        <p>I traced how the same timestamp could end in <code>.123</code> in the query and <code>.123000</code> in the index. The author confirmed that the index could skip a match, changed the query to scan those rows when the formats differ, and added a regression test.</p>
         <a href="https://github.com/ClickHouse/ClickHouse/pull/133245#issuecomment-7063928589">Author’s response · #133245</a>
       </article>
     </div>
